@@ -11,14 +11,16 @@ on:
     workflows: ["Publish images"]
     types: [completed]
 
+env:
+  DO_TOKEN: ${{ secrets.do_token }}
+
+
 jobs:
   module:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == '' }}
     uses: NethServer/ns8-github-actions/.github/workflows/module-info.yml@main
   run_tests:
     needs: module
-    env:
-      DO_TOKEN: ${{ secrets.do_token }}
     if: ${{ env.DO_TOKEN != '' }}
     uses: NethServer/ns8-github-actions/.github/workflows/test-on-digitalocean-infra.yml@main
     with:
